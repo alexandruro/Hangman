@@ -5,16 +5,24 @@ move game logic to another file. Ideally the API will be simple, concerned
 primarily with communication to/from the API's users."""
 
 
-import logging
 import endpoints
 from protorpc import remote, messages
 from google.appengine.api import memcache
 from google.appengine.api import taskqueue
 
 from models import User, Game, Score
-from models import StringMessage, NewGameForm, GameForm, MakeMoveForm,\
-    ScoreForms, GameForms, GetHighScoresForm, HighScoresForm, HighScoresForms,\
-    Move, HistoryForm
+from models import (StringMessage, 
+    NewGameForm, 
+    GameForm, 
+    MakeMoveForm,
+    ScoreForms, 
+    GameForms, 
+    GetHighScoresForm, 
+    HighScoresForm, 
+    HighScoresForms,
+    Move, 
+    HistoryForm
+)
 from utils import get_by_urlsafe
 
 NEW_GAME_REQUEST = endpoints.ResourceContainer(NewGameForm)
@@ -47,7 +55,7 @@ class HangmanApi(remote.Service):
         if not user:
             raise endpoints.NotFoundException(
                     'A User with that name does not exist!')
-        games = Game.query(Game.user == user.key)
+        games = Game.query(Game.user == user.key, Game.game_over==False)
         return GameForms(items=[game.to_form("") for game in games])
 
 
@@ -71,7 +79,7 @@ class HangmanApi(remote.Service):
                     response_message= StringMessage,
                     path = 'game/{urlsafe_game_key}/cancel',
                     name='cancel_game',
-                    http_method='POST')
+                    http_method='PUT')
     def cancel_game(self, request):
         """Cancel an active game"""
         game = get_by_urlsafe(request.urlsafe_game_key, Game)
@@ -203,12 +211,11 @@ class HangmanApi(remote.Service):
         """Makes a move. Returns a game state with message"""
         game = get_by_urlsafe(request.urlsafe_game_key, Game)
         if game.game_over:
-            return game.to_form('Game already over!')
+            raise endpoints.ForbiddenException('Illegal action: Game is already over.')
 
         if len(request.guess) != 1 or not request.guess[0].isalpha():
             return game.to_form('Guess must be a letter!')
-
-        game.attempts_remaining -= 1
+        
 
         if request.guess[0] in game.history:
             return game.to_form('You already guessed that letter!')
@@ -219,6 +226,7 @@ class HangmanApi(remote.Service):
             good_guess = True
         else:
             good_guess = False
+            game.attempts_remaining -= 1
 
         prog = ""
 

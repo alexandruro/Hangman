@@ -1,4 +1,4 @@
-#Full Stack Nanodegree Project 4 Refresh
+#Full Stack Nanodegree Project 4 - Hangman API
 
 ## Set-Up Instructions:
 1.  Update the value of application in app.yaml to the app ID you have registered
@@ -15,7 +15,8 @@ Hangman is a game in which a random word is chosen and which the player has to g
 
 ## Other details
 
-A reminder email is sent periodically to users that have incomplete games.
+A reminder email is sent periodically (every 24 hours) to users that have incomplete games.
+
 
 ##Files Included:
  - api.py: Contains endpoints and game playing logic.
@@ -37,12 +38,10 @@ A reminder email is sent periodically to users that have incomplete games.
  - **new_game**
     - Path: 'game'
     - Method: POST
-    - Parameters: user_name, min, max, attempts
+    - Parameters: user_name, attempts
     - Returns: GameForm with initial game state.
     - Description: Creates a new Game. user_name provided must correspond to an
-    existing user - will raise a NotFoundException if not. Min must be less than
-    max. Also adds a task to a task queue to update the average moves remaining
-    for active games.
+    existing user - will raise a NotFoundException if not. 
      
  - **get_game**
     - Path: 'game/{urlsafe_game_key}'
@@ -88,28 +87,28 @@ A reminder email is sent periodically to users that have incomplete games.
     - Returns: GameForms
     - Description: Gets a user's games
 
-    - **cancel_game**
+ - **cancel_game**
     - Path: 'game/{urlsafe_game_key}/cancel'
-    - Method: POST
+    - Method: PUT
     - Parameters: urlsafe_game_key
     - Returns: StringMessage
     - Description: Cancels an active game
 
-    - **get_high_scores**
+ - **get_high_scores**
     - Path: 'scores/highscores'
     - Method: GET
     - Parameters: None
     - Returns: HighScoresForm
     - Description: Gets the high score leaderboard
 
-    - **get_user_rankings**
+ - **get_user_rankings**
     - Path: 'scores/rankings'
     - Method: GET
     - Parameters: None
     - Returns: HighScoresForms
     - Description: Gets all players ranked by performance
 
-    - **get_game_history**
+ - **get_game_history**
     - Path: 'game/{urlsafe_game_key}/history'
     - Method: GET
     - Parameters: urlsafe_game_key

@@ -34,7 +34,7 @@ class Game(ndb.Model):
         
         # Get a word
         response = urllib2.urlopen("http://randomword.setgetgo.com/get.php")
-        target = response.read()
+        target = response.read().lower();
 
         logging.warning(target);
 

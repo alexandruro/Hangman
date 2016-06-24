@@ -1,0 +1,7 @@
+Design decisions and reflections
+
+- All in all this is a simple implementation, thus the ability to guess a whole word is not present for the time being.
+
+- The score of a player is calculated by computing the difference between the number of won games and the number of lost games. This means players who played a small number of games can be higher in the score board than players who played a lot of games (but maybe lost most of them), because playing a lot does not imply being a good player.
+
+- The choosing of words is dependent on a 3rd party API I found (http://randomword.setgetgo.com/get.php). This should offer a lot of variety.

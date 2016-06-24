@@ -17,6 +17,10 @@ Hangman is a game in which a random word is chosen and which the player has to g
 
 A reminder email is sent periodically (every 24 hours) to users that have incomplete games.
 
+The ability to guess a whole word is not present for the time being.
+
+- The score of a player is calculated by computing the difference between the number of won games and the number of lost games. This means players who played a small number of games can be higher in the score board than players who played a lot of games (but maybe lost most of them), because playing a lot does not imply being a good player.
+
 
 ##Files Included:
  - api.py: Contains endpoints and game playing logic.
